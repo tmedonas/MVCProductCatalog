@@ -64,6 +64,8 @@ namespace tm_mvc.Controllers
                     items = response.Content.ReadAsAsync<IEnumerable<ProductDto>>().Result.OrderBy(o => o.Id).ToList();
 
             }
+            if (items.Count == 0)
+                return RedirectToAction("Index");
             string sWebRootFolder = _hostingEnvironment.WebRootPath; 
             string sFileName = @"ProductCatalog.xlsx";
             string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
