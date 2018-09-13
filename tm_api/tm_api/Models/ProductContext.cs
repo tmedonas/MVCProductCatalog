@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace tm_api_mvc.Models
+namespace tm_api.Models
 {
     public class ProductContext : DbContext
     {
@@ -19,6 +19,9 @@ namespace tm_api_mvc.Models
         {
             builder.Entity<ProductDto>(entity => {
                 entity.HasIndex(e => e.Code).IsUnique();
+                builder.Entity<ProductDto>()
+                .HasAlternateKey(c => c.Code)
+                .HasName("AlternateKey_Code");
             });
         }
     }

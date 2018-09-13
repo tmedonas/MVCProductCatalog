@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<h2>Product Catalog</h2>
+
+<hr />
+<div id="ProductCatalog" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <br />
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Photo</th>
+            <th>Price</th>
+            <th>LastUpdated</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @foreach (var res in ViewBag.result)
+        {
+            <tr>
+                <td>@res.Id</td>
+                <td>@res.Code</td>
+                <td>@res.Name</td>
+                <td>
+                    @if (res.Photo != null)
+                    {
+                        <img src="data:image;base64,@Convert.ToBase64String(@res.Photo)" id="tbPhoto_@res.Id" width="150" height="150" object-fit="cover" />
+                    }
+                </td>
+                <td>@res.Price</td>
+                <td>@res.LastUpdated</td>
+                <td><input type="button" value="Update" onclick="location.href='@Url.Action("", "ProductEdit")?id=@res.Id&Code=@res.Code&Name=@res.Name&Price=@res.Price'" /></td>
+                <td><input type="button" value="Delete" onclick="location.href='@Url.Action("Delete")?id=@res.Id'" /></td>
+            </tr>
+        }
+
+    </table>
+    <input type="button" value="Export" onclick="location.href='@Url.Action("Export")'" />
+</div>
+
+<style>
+    table {
+        border: solid;
+    }
+
+        table th,
+        table td {
+            border: 1px solid;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+</style>

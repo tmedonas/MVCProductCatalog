@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace tm_api_mvc
+namespace tm_mvc
 {
     public class Startup
     {
+        public readonly Uri api_url = new Uri("https://localhost:44357");
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

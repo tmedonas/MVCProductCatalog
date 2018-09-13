@@ -5,9 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using tm_api_mvc.Models;
+using Microsoft.EntityFrameworkCore;
+using tm_api.Models;
 
-namespace tm_api_mvc.Controllers
+namespace tm_api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -21,12 +22,12 @@ namespace tm_api_mvc.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<ProductDto>> GetProductList()
+        public async Task<ActionResult<List<ProductDto>>> GetProductList()
         {
             List<ProductDto> items;
             try
             {
-                items = _context.ProductDto.ToList();
+                items = await _context.ProductDto.OrderBy(o => o.Id).ToListAsync();
                 if (items == null)
                     return NotFound();
             }
@@ -57,16 +58,13 @@ namespace tm_api_mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ProductDto item, IFormFile img)
+        public async Task<IActionResult> Create(ProductDto item)
         {
             try
             {
-                if (img != null)
-                {
-                    item.Photo = GetByteArrayFromImage(img);
-                    //item.ImageSourceFileName = System.IO.Path.GetFileName(img.FileName);
-                    //item.ImageContentType = img.ContentType;
-                }
+                if (_context.ProductDto.Count(c => c.Code == item.Code) > 0)
+                    return StatusCode(422, "Product Code already exists!");
+                item.LastUpdated = DateTime.Now;
                 _context.ProductDto.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -77,25 +75,19 @@ namespace tm_api_mvc.Controllers
             return CreatedAtRoute("GetProduct", new { id = item.Id }, item);
         }
 
-        private byte[] GetByteArrayFromImage(IFormFile file)
-        {
-            using (var target = new MemoryStream())
-            {
-                file.CopyTo(target);
-                return target.ToArray();
-            }
-        }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(long id, ProductDto item)
         {
             try
             {
+                if (_context.ProductDto.Count(c => c.Id != item.Id && c.Code == item.Code) > 0)
+                    return StatusCode(422, "Product Code already exists!");
                 var item_to_update = _context.ProductDto.Find(id);
                 item_to_update.Code = item.Code;
                 item_to_update.Name = item.Name;
                 item_to_update.Photo = item.Photo;
                 item_to_update.Price = item.Price;
+                item_to_update.LastUpdated = DateTime.Now;
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

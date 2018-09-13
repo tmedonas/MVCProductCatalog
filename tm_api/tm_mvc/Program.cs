@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace tm_api_mvc
+namespace tm_mvc
 {
     public class Program
     {
+        public static readonly Uri api_url = new Uri("https://localhost:44357");
+        public static readonly string api_route = "api/ProductCatalog";
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();

@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace tm_api_mvc.Models
+namespace tm_mvc.Models
 {
     public class ErrorViewModel
     {

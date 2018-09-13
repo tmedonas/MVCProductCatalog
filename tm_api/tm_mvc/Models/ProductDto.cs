@@ -4,18 +4,18 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace tm_api_mvc.Models
+namespace tm_mvc.Models
 {
     public class ProductDto
     {
-        [Key]
         public long Id { get; set; }
+        [Required]
         public string Code { get; set; }
         [Required]
         public string Name { get; set; }
         public byte[] Photo { get; set; }
-        [Required]
+        [Range(0, 999)]
         public decimal Price { get; set; }
-        public DateTime LastUpdated { get; } = DateTime.Now;
+        public DateTime LastUpdated { get; set; }
     }
 }
